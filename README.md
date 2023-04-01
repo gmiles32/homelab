@@ -1,6 +1,12 @@
 # Homelab
 This is a catch-all for all of my homelab related things. I realized that as I figure things out, I want to try and document exactly how I implemented them so that future me wouldn't be screwed over. I will also add links to reference materials and source directories as needed.
 
+## Resources
+- [How to set up TrueNAS with Tailscale and Nextcloud](https://forum.level1techs.com/t/truenas-scale-ultimate-home-setup-incl-tailscale/186444)
+- [Traefik and SSL Certificates](https://www.youtube.com/watch?v=liV3c9m_OX8)
+    - [Repo with config from video](https://github.com/techno-tim/techno-tim.github.io/tree/master/reference_files/traefik-portainer-ssl)
+- [Using Pi-hole w/ Tailscale](https://leonsteenkamp.co.za/posts/traefikproxyintro/)
+
 # Basic Setup
 I'm currently running everything on TrueNAS Scale. It works for me, since my homelab functions primarily as a NAS/backup server. It's running on some pretty aged hardware, but it does the job for now. 
 

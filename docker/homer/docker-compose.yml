@@ -1,0 +1,30 @@
+version: "2"
+services:
+  homer:
+    image: b4bz/homer
+    #To build from source, comment previous line and uncomment below
+    #build: .
+    container_name: homer
+    volumes:
+      - /home/username/homer/assets:/www/assets
+    user: 1000:1000 # default
+    environment:
+      - INIT_ASSETS=1 # default
+    networks:
+      - traefik_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homer.entrypoints=web"
+      - "traefik.http.routers.homer.rule=Host(`homer.local.example.com`)"
+      - "traefik.http.middlewares.homer-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.homer.middlewares=portainer-https-redirect"
+      - "traefik.http.routers.homer-secure.entrypoints=websecure"
+      - "traefik.http.routers.homer-secure.rule=Host(`homer.local.example.com`)"
+      - "traefik.http.routers.homer-secure.tls=true"
+      - "traefik.http.routers.homer-secure.service=homer"
+      - "traefik.http.services.homer.loadbalancer.server.port=8080"
+      - "traefik.docker.network=traefik_default"
+      
+networks:
+  traefik_default:
+    external: true

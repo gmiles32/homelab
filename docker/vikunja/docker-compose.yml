@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  api:
+    image: vikunja/api
+    environment:
+      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_DATABASE_PASSWORD: secret
+      VIKUNJA_DATABASE_TYPE: mysql
+      VIKUNJA_DATABASE_USER: vikunja
+      VIKUNJA_DATABASE_DATABASE: vikunja
+      VIKUNJA_SERVICE_JWTSECRET: <jwt-secret>
+      VIKUNJA_SERVICE_FRONTENDURL: https://vikunja.local.example.com/
+    volumes: 
+      - /home/username/vikunja/files:/app/vikunja/files
+    networks:
+      - traefik_default
+      - default
+    depends_on:
+      - db
+    restart: unless-stopped
+    labels:   
+      - "traefik.enable=true"
+      - "traefik.http.routers.vikunja-api.entrypoints=web"
+      - "traefik.http.routers.vikunja-api.rule=Host(`vikunja.local.example.com`) && (PathPrefix(`/api/v1`) || PathPrefix(`/dav/`) || PathPrefix(`/.well-known/`))"
+      - "traefik.http.middlewares.vikunja-api-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.vikunja-api.middlewares=portainer-https-redirect"
+      - "traefik.http.routers.vikunja-api-secure.entrypoints=websecure"
+      - "traefik.http.routers.vikunja-api-secure.rule=Host(`vikunja.local.example.com`) && (PathPrefix(`/api/v1`) || PathPrefix(`/dav/`) || PathPrefix(`/.well-known/`))"
+      - "traefik.http.routers.vikunja-api-secure.tls=true"
+      #- "traefik.http.routers.vikunja-api-secure.service=vikunja-api"
+      - "traefik.docker.network=traefik_default"
+  frontend:
+    image: vikunja/frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vikunja-frontend.entrypoints=web"
+      - "traefik.http.routers.vikunja-frontend.rule=Host(`vikunja.local.example.com`)"
+      - "traefik.http.middlewares.vikunja-frontend-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.vikunja-frontend.middlewares=portainer-https-redirect"
+      - "traefik.http.routers.vikunja-frontend-secure.entrypoints=websecure"
+      - "traefik.http.routers.vikunja-frontend-secure.rule=Host(`vikunja.local.example.com`)"
+      - "traefik.http.routers.vikunja-frontend-secure.tls=true"
+      #- "traefik.http.routers.vikunja-frontend-secure.service=vikunja-frontend"
+      - "traefik.docker.network=traefik_default"
+    networks:
+      - traefik_default
+      - default
+    restart: unless-stopped
+  db:
+    image: mariadb:10
+    command: 
+      - --character-set-server=utf8mb4 
+      - --collation-server=utf8mb4_unicode_ci
+      - --max-connections=1000
+    environment:
+      MYSQL_ROOT_PASSWORD: secretsecret 
+      MYSQL_USER: vikunja
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: vikunja
+    volumes:
+      - /home/username/vikunja/db:/var/lib/mysql
+    restart: unless-stopped
+
+networks:
+  traefik_default:
+    external: true

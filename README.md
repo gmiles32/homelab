@@ -1,6 +1,12 @@
 # Homelab
 This is a catch-all for all of my homelab related things. I realized that as I figure things out, I want to try and document exactly how I implemented them so that future me wouldn't be screwed over. I will also add links to reference materials and source directories as needed.
 
+---
+
+_Update 09/27/23: I have continued working on my homelab, but for obvious reasons (general privacy stuff) I have not uploaded my docker compose here. I am working on converting all docker compose to ansible playbooks, for better secret management. Look for that coming in the next month or so._
+
+---
+
 ## Resources
 - [How to set up TrueNAS with Tailscale and Nextcloud](https://forum.level1techs.com/t/truenas-scale-ultimate-home-setup-incl-tailscale/186444)
 - [Traefik and SSL Certificates](https://www.youtube.com/watch?v=liV3c9m_OX8)
